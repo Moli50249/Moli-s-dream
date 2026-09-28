@@ -1,0 +1,60 @@
+# 站点配置：一行一个 key = value，# 开头是注释
+# —— 下面这些是必须改成你自己的 ——
+
+name     = 莫璃
+title    = Just a freshman
+tagline  = 写代码，也玩养老游戏。都还在练。
+location = 辽D
+email    = 1914304626@qq.com
+github   = https://github.com/Moli50249
+
+# 主题色，只支持 #rgb 或 #rrggbb
+accent   = #D3CCB9
+accent2  = #E5026B
+accent3  = #017A80
+
+# 壁纸：把图片命名为 wallpaper.jpg（或 .png / .jpeg / .webp）放进 content/ 就自动启用。
+# 页面首屏（上方）会铺满这张图，往下过渡到深色背景，正文压在磨砂玻璃面板上。
+# 想关掉就把图片删掉或改名，不用改任何配置。
+
+# 头像：content/avatar.png（或 .jpg / .jpeg / .webp）存在就用真照片，否则用姓名首字生成的 SVG。
+# 左侧导航栏、首屏、进场门三处共用同一张。
+
+# 进场门：on = 先显示封面确认页 + WELCOME 赛博加载；off = 直接进主页
+# 门只是覆盖层，正文始终在 HTML 里，不影响搜索收录和链接预览
+age_gate = on
+
+# 门上的确认按钮配色（默认是图 1 那种橙色）
+gate_accent = #ff7a18
+
+# 进门后的 WELCOME 像素动画：
+#   auto   = 系统开了「减少动态效果」就跳过动画（无障碍规范）
+#   always = 无论如何都播这段动画
+welcome = always
+
+# 整页动效（像素火焰、光标粒子、芯片电流、滚动进场、打字机、平滑滚动…）：
+#   auto   = 跟随系统的「减少动态效果」
+#   always = 页面自己说了算，不受系统设置影响（默认）
+# 如果你的系统关掉了窗口动画（Windows 的"动画效果"关闭），
+# 浏览器会报告 prefers-reduced-motion: reduce，
+# 这时 auto 会让动效全部不播 —— 保持 always 就能正常看到。
+motion = always
+
+# 芯片栏：芯片上的丝印与副标题（"核心面板"那一栏）
+chip_label = MOLI-50249
+chip_sub   = C++ SSG / v2.0
+
+gate_btn  = 我保证我已满18岁！确定进入！
+gate_note = （其实这里没什么不能看的）
+# 门上的九宫格入口（3×3 共九个）。不填就用默认那九个：
+#   关于我 / 技能 / 项目 / 经历 / 核心面板 / 游戏 / GitHub / 邮箱 / 回到首屏
+#   （"游戏"会直接跳到技能区里的"游戏"大框）
+# 格式：标签:目标，逗号分隔；@github / @email 会自动换成上面的真实地址
+# gate_links = 关于我:#about, 技能:#skills, 项目:#projects, 经历:#timeline, 核心面板:#core, 游戏:#g-游戏, GitHub:@github, 邮箱:@email, 回到首屏:#top
+
+# 自定义域名，必须是真域名（如 site.com），留空则用 GitHub 默认的 xxx.github.io
+# 注意：这里填 GitHub 用户名是错的，会导致 CNAME 失效
+domain   =
+
+# 页脚说明
+footer   = 这个页面由 C++ 写的静态站点生成器构建，托管在 GitHub Pages。

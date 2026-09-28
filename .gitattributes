@@ -1,0 +1,13 @@
+# 统一行尾：仓库里一律用 LF。
+# Windows 上如果没有这行，Git 会把文本文件转成 CRLF 存下来，
+# 拉到 Linux CI 上再生成页面时，格式就可能和本地不一致。
+* text=auto eol=lf
+
+# 这些是二进制，别动
+*.webp binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.exe binary
