@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>莫璃 · Just a freshman</title>
+<meta name="description" content="写代码，也玩养老游戏。都还在练。">
+<meta property="og:title" content="莫璃 · Just a freshman">
+<meta property="og:description" content="写代码，也玩养老游戏。都还在练。">
+<meta property="og:type" content="profile">
+<meta property="og:image" content="avatar.webp">
+<meta name="theme-color" content="#D3CCB9">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script>
+/* 首次绘制之前定下几件事，避免闪烁：
+   1) 要不要显示进场门   2) 动效是否跟随系统   3) WELCOME 动画是否强制播   4) 有没有壁纸 */
+(function () {
+  var r = document.documentElement;
+  if (true) r.classList.add('gate-on');
+  if (!true) r.classList.add('motion-auto');
+  if (true) r.classList.add('welcome-always');
+  if ('wallpaper.jpg') r.classList.add('has-wallpaper');
+})();
+</script>
+</head>
+<body>
+
+<div id="progress" aria-hidden="true"><i></i></div>
+
+<!-- 背景层：像素火焰。贴在内容下面，透过磨砂面板透出光 -->
+<div id="fx-fire" class="fx-layer fx-back" aria-hidden="true"><canvas id="fire-canvas"></canvas></div>
+<!-- 前景层：跟随鼠标的像素粒子 -->
+<div id="fx-cursor" class="fx-layer fx-front" aria-hidden="true"><canvas id="cursor-canvas"></canvas></div>
+
+<div id="gate" role="dialog" aria-label="进入确认">
+  <div class="gate-stage">
+    <div class="gate-slides">
+      <figure class="gate-slide is-cover">
+        <div class="gate-poster">
+          <img src="wallpaper.jpg" alt="莫璃">
+          <div class="gate-plaque"><i>欢迎来到</i><b>莫璃</b></div>
+        </div>
+        <div class="gate-strip">
+          <canvas width="48" height="40" aria-hidden="true"></canvas>
+          <b>莫璃 发布页</b>
+          <span>RELEASE</span>
+        </div>
+      </figure>
+      <figure class="gate-slide">
+        <div class="gate-card">
+          <img class="gate-face" src="avatar.webp" alt="莫璃">
+          <h3>莫璃</h3>
+          <p>Just a freshman<br>写代码，也玩养老游戏。都还在练。</p>
+          <div class="gate-mini">
+            <div><span>自述</span>我话很少，内心戏很多，当然这是小时候的事了，现在话少，想法也少，好无力...</div>
+            <div><span>&nbsp;</span>这是第二句话，好的👌。目前在学习c语言，c++，python。为互联网增加垃圾，好的。</div>
+          </div>
+        </div>
+      </figure>
+      <figure class="gate-slide">
+        <div class="gate-card">
+          <h3>站内速览</h3>
+          <div class="gate-mini">
+            <div><span>技能</span>C/C++ · Python · 明日方舟863819323 · 绝区零47102550 · 音游 · 跑步 · 乒乓球…</div>
+            <div><span>项目</span>这个网站</div>
+            <div><span>经历</span>2026 - 至今 · 在沈理当理位冰，在计协看看大佬，在群里看看xnn...qwq… ／ 2023 - 2026 · …</div>
+          </div>
+        </div>
+      </figure>
+      <figure class="gate-slide">
+        <div class="gate-card">
+          <h3>联系方式</h3>
+          <div class="gate-contact">
+            <span>位置：<b>辽D</b></span>
+            <span>邮箱：<a href="mailto:1914304626@qq.com">1914304626@qq.com</a></span>
+            <span>GitHub：<a href="https://github.com/Moli50249" target="_blank" rel="noopener">https://github.com/Moli50249</a></span>
+            <span>（其实这里没什么不能看的）</span>
+          </div>
+        </div>
+      </figure>
+    </div>
+    <div class="gate-dots" role="tablist" aria-label="封面切换">
+      <button type="button" class="on" aria-label="第 1 屏"></button>
+      <button type="button" aria-label="第 2 屏"></button>
+      <button type="button" aria-label="第 3 屏"></button>
+      <button type="button" aria-label="第 4 屏"></button>
+    </div>
+    <button id="gate-btn" type="button">
+      <span class="gate-btn-fill"></span>
+      <span class="gate-btn-label">我保证我已满18岁！确定进入！</span>
+    </button>
+    <p class="gate-note">（其实这里没什么不能看的）</p>
+    <nav class="gate-links">
+      <a href="#about">关于我</a>
+      <a href="#skills">技能</a>
+      <a href="#projects">项目</a>
+      <a href="#timeline">经历</a>
+      <a href="#core">核心面板</a>
+      <a href="#g-游戏">游戏</a>
+      <a href="https://github.com/Moli50249" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:1914304626@qq.com">邮箱</a>
+      <a href="#top">回到首屏</a>
+    </nav>
+  </div>
+</div>
+<script type="application/json" id="sprite-data">{"scale":3,"rows":[".......#########.......",".....##wwwwwwwww##.....","....#wwwwwwwwwwwww#....","....#wwwwwwwwwwwww#....","...#wwwwwwwwwwwwwww#...","...#ww###wwwww###ww#...","...#ww###wwwww###ww#...","...#ww###ww#ww###ww#...","....#wwwww###wwwww#....","...##w#wwwwwwwww#w##...","...#ww###########ww#...","...#www#w#w#w#w#www#...","....##ww#######ww##....","...#####wwwwwww#####...","..#C#cc#########cc#C#..",".#CCC#cc#ww#ww#cc#CCC#.",".#CCCC#####w#####CCCC#.","#CC#CCCC#..#..#CCCC#CC#","#CCC#CCC#.....#CCC#CCC#"]}</script>
+
+<div id="welcome" aria-hidden="true">
+  <canvas id="welcome-canvas" width="480" height="180"></canvas>
+  <div class="w-scan" aria-hidden="true"></div>
+  <div class="w-hud">
+    <div class="w-bar"><i></i></div>
+    <div class="w-log"></div>
+  </div>
+</div>
+
+
+<button id="nav-toggle" type="button" aria-label="打开目录" aria-expanded="false">
+  <i></i><i></i><i></i>
+</button>
+<div id="nav-scrim" class="nav-scrim" hidden></div>
+
+<aside id="sidebar" class="sidebar" aria-label="站点目录">
+  <i class="side-rail" aria-hidden="true"><b id="side-progress"></b></i>
+
+  <a class="side-brand" href="#top">
+    <img class="side-avatar" src="avatar.webp" alt="莫璃" width="46" height="46">
+    <span class="side-brand-txt"><b>莫璃</b><i>Just a freshman</i></span>
+  </a>
+
+  <div class="side-search">
+    <input id="side-q" type="text" autocomplete="off" spellcheck="false"
+           placeholder="快速查找…" aria-label="快速查找内容">
+    <span class="side-key" aria-hidden="true">/</span>
+  </div>
+  <div id="side-hits" class="side-hits" hidden></div>
+
+  <nav id="side-nav" class="side-nav" aria-label="内容导航">
+    <i id="side-pill" class="side-pill" aria-hidden="true"></i>
+    <a class="side-link" href="#about" data-target="about">
+      <span class="n">01</span>
+      <span class="t">关于我</span>
+      <span class="c">4</span>
+    </a>
+    <a class="side-link" href="#skills" data-target="skills">
+      <span class="n">02</span>
+      <span class="t">技能</span>
+      <span class="c">14</span>
+    </a>
+    <a class="side-link" href="#projects" data-target="projects">
+      <span class="n">03</span>
+      <span class="t">项目</span>
+      <span class="c">1</span>
+    </a>
+    <a class="side-link" href="#timeline" data-target="timeline">
+      <span class="n">04</span>
+      <span class="t">经历</span>
+      <span class="c">4</span>
+    </a>
+    <a class="side-link" href="#core" data-target="core">
+      <span class="n">05</span>
+      <span class="t">核心面板</span>
+      <span class="c">6</span>
+    </a>
+
+  </nav>
+
+  <div class="side-foot">
+    <button id="theme-btn" type="button" aria-label="切换深浅色">
+      <span id="theme-icon" aria-hidden="true">◐</span><em>主题</em>
+    </button>
+    <a href="https://github.com/Moli50249" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:1914304626@qq.com">邮箱</a>
+  </div>
+</aside>
+
+<div class="shell">
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-avatar">
+      <img class="avatar" src="avatar.webp" alt="莫璃" width="132" height="132">
+    </div>
+    <div class="hero-text">
+      <p class="eyebrow">辽D · ONLINE</p>
+      <h1>莫璃</h1>
+      <p class="role">Just a freshman</p>
+      <p class="tagline">写代码，也玩养老游戏。都还在练。</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#projects">看看我做过的</a>
+        <a class="btn" href="#core">核心面板</a>
+        <a class="btn" href="mailto:1914304626@qq.com">联系我</a>
+      </div>
+      <ul class="hero-stats"><li><b>14</b>项技能</li><li><b>1</b>个项目</li><li><b>4</b>段经历</li><li><b>C++</b>写的生成器</li></ul>
+    </div>
+    <i class="hero-scan" aria-hidden="true"></i>
+  </section>
+
+  <section id="about" class="block reveal">
+    <h2><span class="num">01</span>关于我</h2>
+    <div class="prose"><h3>个人简介</h3>
+<div class="dialogue">
+  <div class="dlg" data-k="莫璃：我话很少，内心戏很多，当然这是小时候的事了，现在话少，想法也少，好无力...">
+    <span class="dlg-who" title="莫璃">莫</span>
+    <p class="dlg-text">莫：我话很少，内心戏很多，当然这是小时候的事了，现在话少，想法也少，好无力...</p>
+  </div>
+  <div class="dlg" data-k="莫璃：这是第二句话，好的👌。目前在学习c语言，c++，python。为互联网增加垃圾，好的。">
+    <span class="dlg-who" title="莫璃">莫</span>
+    <p class="dlg-text">莫：这是第二句话，好的👌。目前在学习c语言，c++，python。为互联网增加垃圾，好的。</p>
+  </div>
+  <div class="dlg" data-k="莫璃：目前认为AI挺神奇的，嗯嗯还是很有进步空间的，未来可期。">
+    <span class="dlg-who" title="莫璃">莫</span>
+    <p class="dlg-text">莫：目前认为<strong>AI</strong>挺神奇的，嗯嗯还是很有进步空间的，未来可期。</p>
+  </div>
+</div>
+<hr>
+<p>有玩游戏的可以交流交流，只玩点养老游戏...<em>明日方舟</em></p>
+<div class="about-bars">
+  <div class="skill" data-k="小资历">
+    <div class="skill-head"><span class="skill-name">小资历</span><span class="skill-pct">100%</span></div>
+    <div class="skill-track"><div class="skill-fill" data-pct="100" style="width:100%"></div></div>
+  </div>
+</div>
+</div>
+  </section>
+
+  <section id="skills" class="block reveal">
+    <h2><span class="num">02</span>技能</h2>
+    <div class="skills"><div class="skill-group" id="g-语言" data-k="语言">
+  <div class="skill-group-head">
+    <h3>语言</h3>
+    <span class="skill-group-n">2 项</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill" data-k="C/C++">
+      <div class="skill-head"><span class="skill-name">C/C++</span><span class="skill-pct">17%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="17" style="width:17%"></div></div>
+    </div>
+    <div class="skill" data-k="Python">
+      <div class="skill-head"><span class="skill-name">Python</span><span class="skill-pct">9%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="9" style="width:9%"></div></div>
+    </div>
+  </div>
+</div>
+<div class="skill-group" id="g-游戏" data-k="游戏">
+  <div class="skill-group-head">
+    <h3>游戏</h3>
+    <span class="skill-group-n">5 项</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill" data-k="明日方舟863819323">
+      <div class="skill-head"><span class="skill-name">明日方舟863819323</span><span class="skill-pct">99%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="99" style="width:99%"></div></div>
+    </div>
+    <div class="skill" data-k="崩坏:星穹铁道115449494">
+      <div class="skill-head"><span class="skill-name">崩坏:星穹铁道115449494</span><span class="skill-pct">99%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="99" style="width:99%"></div></div>
+    </div>
+    <div class="skill" data-k="明日方舟:终末地1860393190">
+      <div class="skill-head"><span class="skill-name">明日方舟:终末地1860393190</span><span class="skill-pct">99%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="99" style="width:99%"></div></div>
+    </div>
+    <div class="skill" data-k="绝区零47102550">
+      <div class="skill-head"><span class="skill-name">绝区零47102550</span><span class="skill-pct">99%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="99" style="width:99%"></div></div>
+    </div>
+    <div class="skill" data-k="音游">
+      <div class="skill-head"><span class="skill-name">音游</span><span class="skill-pct">99%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="99" style="width:99%"></div></div>
+    </div>
+  </div>
+</div>
+<div class="skill-group" id="g-运动" data-k="运动">
+  <div class="skill-group-head">
+    <h3>运动</h3>
+    <span class="skill-group-n">4 项</span>
+  </div>
+  <div class="skill-grid">
+    <div class="skill" data-k="跑步">
+      <div class="skill-head"><span class="skill-name">跑步</span><span class="skill-pct">21%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="21" style="width:21%"></div></div>
+    </div>
+    <div class="skill" data-k="乒乓球">
+      <div class="skill-head"><span class="skill-name">乒乓球</span><span class="skill-pct">11%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="11" style="width:11%"></div></div>
+    </div>
+    <div class="skill" data-k="羽毛球">
+      <div class="skill-head"><span class="skill-name">羽毛球</span><span class="skill-pct">30%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="30" style="width:30%"></div></div>
+    </div>
+    <div class="skill" data-k="骑行">
+      <div class="skill-head"><span class="skill-name">骑行</span><span class="skill-pct">42%</span></div>
+      <div class="skill-track"><div class="skill-fill" data-pct="42" style="width:42%"></div></div>
+    </div>
+  </div>
+</div>
+</div>
+  </section>
+
+  <section id="projects" class="block reveal">
+    <h2><span class="num">03</span>项目</h2>
+    <div class="cards"><article class="card" data-k="这个网站">
+  <h3>这个网站</h3>
+  <p>用 C++ 写的静态站点生成器搭的个人主页：Markdown 解析、模板渲染、连头像 SVG 都是自己写的代码画的，跑一次就产出纯静态页面。</p>
+<ul>
+  <li><a href="https://github.com/Moli50249" target="_blank" rel="noopener">源码</a></li>
+</ul>
+
+</article>
+</div>
+  </section>
+
+  <section id="timeline" class="block reveal">
+    <h2><span class="num">04</span>经历</h2>
+    <ol class="timeline">
+  <li data-k="在沈理当理位冰，在计协看看大佬，在群里看看xnn...qwq.">
+    <div class="t-when">2026 - 至今</div>
+    <div class="t-body">
+      <h4>在沈理当理位冰，在计协看看大佬，在群里看看xnn...qwq.</h4>
+    </div>
+  </li>
+  <li data-k="某高中">
+    <div class="t-when">2023 - 2026</div>
+    <div class="t-body">
+      <h4>某高中</h4>
+      <p>进行一些运动，毕业有了自己第一台电脑.</p>
+    </div>
+  </li>
+  <li data-k="小地方初中">
+    <div class="t-when">2020 - 2023</div>
+    <div class="t-body">
+      <h4>小地方初中</h4>
+      <p>想想还是挺怀念的</p>
+    </div>
+  </li>
+  <li data-k="上小学">
+    <div class="t-when">2014 - 2020</div>
+    <div class="t-body">
+      <h4>上小学</h4>
+      <p>绿水青山</p>
+    </div>
+  </li>
+</ol>
+
+  </section>
+
+  <section id="core" class="block reveal">
+    <h2><span class="num">05</span>核心面板</h2>
+    <p class="block-lead">一块虚拟芯片：四周的电流往中间涌，中间印着这台"站点机器"的规格。</p>
+    <div class="board" id="core-board" data-label="MOLI-50249" data-sub="C++ SSG / v2.0">
+      <canvas id="chip-canvas" aria-hidden="true"></canvas>
+      <div class="board-hud">      <div class="spec" data-k="莫璃"><i>NAME</i><b>莫璃</b></div>
+      <div class="spec" data-k="辽D"><i>NODE</i><b>辽D</b></div>
+      <div class="spec" data-k="1914304626@qq.com"><i>MAIL</i><b><a href="mailto:1914304626@qq.com">1914304626@qq.com</a></b></div>
+      <div class="spec" data-k="Moli50249"><i>SOURCE</i><b><a href="https://github.com/Moli50249" target="_blank" rel="noopener">Moli50249</a></b></div>
+      <div class="spec" data-k="MOLI-50249"><i>CHIP</i><b>MOLI-50249</b></div>
+      <div class="spec" data-k="C++ SSG / v2.0"><i>BUILD</i><b>C++ SSG / v2.0</b></div>
+</div>
+      <i class="board-corner tl" aria-hidden="true"></i>
+      <i class="board-corner tr" aria-hidden="true"></i>
+      <i class="board-corner bl" aria-hidden="true"></i>
+      <i class="board-corner br" aria-hidden="true"></i>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p class="footer-cta">有想法？<a href="mailto:1914304626@qq.com">给我写封邮件</a></p>
+    <p class="footer-note">这个页面由 C++ 写的静态站点生成器构建，托管在 GitHub Pages。</p>
+    <p class="footer-note">© 2026 莫璃 · 源码是 C++，页面由 C++ 生成</p>
+  </div>
+</footer>
+</div>
+
+<script type="application/json" id="site-index">[{"label":"关于我","kind":"区块","t":"关于我","s":"about"},{"label":"技能","kind":"区块","t":"技能","s":"skills"},{"label":"项目","kind":"区块","t":"项目","s":"projects"},{"label":"经历","kind":"区块","t":"经历","s":"timeline"},{"label":"核心面板","kind":"区块","t":"核心面板","s":"core"},{"label":"莫璃：我话很少，内心戏很多，当然这是小时候的事了，现在话少，想法也少，好无力...","kind":"关于 · 自述","t":"关于我","s":"about"},{"label":"莫璃：这是第二句话，好的👌。目前在学习c语言，c++，python。为互联网增加垃圾，好的。","kind":"关于 · 自述","t":"关于我","s":"about"},{"label":"莫璃：目前认为AI挺神奇的，嗯嗯还是很有进步空间的，未来可期。","kind":"关于 · 自述","t":"关于我","s":"about"},{"label":"小资历","kind":"关于 · 自评","t":"关于我","s":"about"},{"label":"语言","kind":"技能分组","t":"技能","s":"skills"},{"label":"C/C++","kind":"技能 · 语言","t":"技能","s":"skills"},{"label":"Python","kind":"技能 · 语言","t":"技能","s":"skills"},{"label":"游戏","kind":"技能分组","t":"技能","s":"skills"},{"label":"明日方舟863819323","kind":"技能 · 游戏","t":"技能","s":"skills"},{"label":"崩坏:星穹铁道115449494","kind":"技能 · 游戏","t":"技能","s":"skills"},{"label":"明日方舟:终末地1860393190","kind":"技能 · 游戏","t":"技能","s":"skills"},{"label":"绝区零47102550","kind":"技能 · 游戏","t":"技能","s":"skills"},{"label":"音游","kind":"技能 · 游戏","t":"技能","s":"skills"},{"label":"运动","kind":"技能分组","t":"技能","s":"skills"},{"label":"跑步","kind":"技能 · 运动","t":"技能","s":"skills"},{"label":"乒乓球","kind":"技能 · 运动","t":"技能","s":"skills"},{"label":"羽毛球","kind":"技能 · 运动","t":"技能","s":"skills"},{"label":"骑行","kind":"技能 · 运动","t":"技能","s":"skills"},{"label":"这个网站","kind":"项目","t":"项目","s":"projects"},{"label":"在沈理当理位冰，在计协看看大佬，在群里看看xnn...qwq.","kind":"经历 · 2026 - 至今","t":"经历","s":"timeline"},{"label":"某高中","kind":"经历 · 2023 - 2026","t":"经历","s":"timeline"},{"label":"小地方初中","kind":"经历 · 2020 - 2023","t":"经历","s":"timeline"},{"label":"上小学","kind":"经历 · 2014 - 2020","t":"经历","s":"timeline"},{"label":"莫璃","kind":"规格","t":"核心面板","s":"core"},{"label":"辽D","kind":"规格","t":"核心面板","s":"core"},{"label":"1914304626@qq.com","kind":"规格","t":"核心面板","s":"core"},{"label":"Moli50249","kind":"规格","t":"核心面板","s":"core"},{"label":"MOLI-50249","kind":"规格","t":"核心面板","s":"core"},{"label":"C++ SSG / v2.0","kind":"规格","t":"核心面板","s":"core"}]</script>
+<script src="fx.js"></script>
+<script src="site.js"></script>
+
+</body>
+</html>
